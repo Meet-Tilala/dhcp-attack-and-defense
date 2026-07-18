@@ -1,0 +1,33 @@
+! Phase 5 - Port Security (Cisco IOS)
+!
+! Port security limits how many source MACs a port will learn. The starvation
+! flood in phase 2 spoofs hundreds of MACs from one attacker port, so with a low
+! limit the first extra MAC trips a violation and shuts the port down.
+!
+! Apply on access ports facing hosts, not on uplinks/trunks. This example uses
+! Fa0/1 for the attacker/victim port.
+
+configure terminal
+
+interface FastEthernet0/1
+ switchport mode access
+ switchport port-security
+ ! allow 2 MACs (host + maybe an IP phone)
+ switchport port-security maximum 2
+ ! remember learned MACs across reboots
+ switchport port-security mac-address sticky
+ ! shut the port on violation (logs a %PORT_SECURITY message)
+ switchport port-security violation shutdown
+exit
+
+! auto-recover an err-disabled port after 5 min (optional)
+errdisable recovery cause psecure-violation
+errdisable recovery interval 300
+
+end
+
+! verify by re-running the starvation tool, then:
+!   show port-security
+!   show port-security interface FastEthernet0/1
+!   show interfaces status err-disabled
+!   show logging | include PORT_SECURITY

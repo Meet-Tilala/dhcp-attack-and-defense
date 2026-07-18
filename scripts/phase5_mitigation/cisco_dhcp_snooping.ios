@@ -1,0 +1,42 @@
+! Phase 5 - DHCP Snooping (+ optional DAI) (Cisco IOS)
+!
+! DHCP snooping marks ports trusted or untrusted. DHCP OFFER/ACK are only
+! allowed from trusted ports, so our rogue server (phase 3) sitting on an
+! untrusted access port gets dropped and victims never get its lease. The rate
+! limit on untrusted ports also slows the phase 2 flood.
+!
+! Assumes: real DHCP server reached via Gi0/1 (trusted uplink), hosts on
+! Fa0/1-24 (untrusted), lab VLAN is 10.
+
+configure terminal
+
+ip dhcp snooping
+ip dhcp snooping vlan 10
+! turn off option-82 for a flat L2 lab with no relay
+no ip dhcp snooping information option
+
+interface GigabitEthernet0/1
+ description uplink to real DHCP server - trusted
+ ip dhcp snooping trust
+exit
+
+interface range FastEthernet0/1 - 24
+ description host ports - untrusted
+ ip dhcp snooping limit rate 10
+exit
+
+! optional: Dynamic ARP Inspection, uses the snooping binding table
+ip arp inspection vlan 10
+interface GigabitEthernet0/1
+ ip arp inspection trust
+exit
+
+end
+
+! verify after re-running phases 2/3:
+!   show ip dhcp snooping
+!   show ip dhcp snooping binding
+!   show ip dhcp snooping statistics
+!   show ip arp inspection
+! rogue offers should be dropped on untrusted ports; the binding table should
+! only show leases from the real server.
