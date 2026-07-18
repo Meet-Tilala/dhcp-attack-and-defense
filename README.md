@@ -106,12 +106,10 @@ are in the comments of each `.ios` file.
 - (Optional) Dynamic ARP Inspection uses the snooping table to block ARP
   spoofing too.
 
-## Authors
+## Owner
 
 - Meet Tilala
-- Om Chandra Sharma
-- Mayank Dahiya
-- Anmol Yadav
+
 - Rudra Gupta
 
 ## License
