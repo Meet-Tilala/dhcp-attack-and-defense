@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Packet captures / logs (may contain sensitive lab data)
+*.pcap
+*.pcapng
+*.cap
+*.log
+
+# dnsmasq runtime
+*.leases
+dnsmasq.pid
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

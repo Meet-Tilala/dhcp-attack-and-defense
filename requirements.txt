@@ -1,0 +1,5 @@
+# Python dependencies for the DHCP starvation / rogue DHCP lab.
+# Install with:  python3 -m pip install -r requirements.txt
+#
+# Scapy is used to craft and sniff raw DHCP packets in phases 1 and 2.
+scapy>=2.5.0
